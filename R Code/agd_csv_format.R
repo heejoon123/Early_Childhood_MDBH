@@ -1,7 +1,5 @@
 #' Name: Heejoon Ahn
 #' Date : June 26, 2020
-#' Making functions for actigraph data adjusted for Emond Lab
-
 #' Load the necessary libraries for all functions that will be applied to the 
 #' package that will ulimately be generated.
 library(zoo)
@@ -17,7 +15,7 @@ library(assertthat)
 library(lubridate)
 library(chron)
 
-############## SET 2: RAW agd FILES READ-IN = pilot study ############## 
+############## SET 2: RAW agd FILES READ-IN = the form of already organized, and pre-generated csv format files ############## 
 
 #' The following two lines are the typical ways to read in the files.
 #' Because the agd files are already converted into 60-second epochs and in excel files,
@@ -26,11 +24,10 @@ library(chron)
 #' 
 
 #' Setting the file path
-file_path <-
-  "~/Desktop/Research/Emond Lab/Copy of Data/raw_actigraph_epoch60/K01M005 AGD/K01M005.csv"
+file_path <- "file path here"
 
 #' reading in the file
-k01m005.df <- read.csv(file=file_path,header = TRUE)
+file_name <- read.csv(file=file_path,header = TRUE)
 
 #' checking the dates of the data file to double check we have all dates
 #' of interest and to make sure what years the subject was observed
@@ -38,7 +35,6 @@ check_dates <- function(df){
   df_dates <- unique(df$date)
   return(df_dates)
 }
-# check_dates(k01m005.df)
 
 #' function made to check that there is no missing data in the file
 #' this should return a table of how many NA values there are in each column. 
@@ -46,7 +42,6 @@ check_no_NA <- function(df){
   numNA <- colSums(is.na(df))
   return(numNA)
 }
-#check_no_NA(k01m043)
 
 #### NOTES SO FAR ####
 #' The two sets of functions should ultimately return the same output of 
@@ -75,8 +70,3 @@ extract_sadeh.df <- function(df, col1=1, col2=5, id_year=2019){
   
   return(sadeh.df)
 }
-
-#' testing the function and seeing if it works
-prep.df <- extract_sadeh.df(k01m005.df, id_year=2019)
-
-
