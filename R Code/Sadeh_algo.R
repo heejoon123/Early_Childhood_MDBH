@@ -1,5 +1,5 @@
 #' Name: Heejoon Ahn
-#' Date : June 26, 2020
+#' Date : June 28, 2020
 #' 
 #' Load the necessary libraries for all functions that will be applied to the 
 #' package that will ulimately be generated.
@@ -15,6 +15,9 @@ library(tools)
 library(assertthat)
 library(lubridate)
 library(chron)
+
+#' Most of this code was generated from referring back to https://github.com/dipetkov/actigraph.sleepr/blob/master/R/apply_sadeh.R
+#' for more information, please refer the link provided.
 
 ############## SET 3: SADEH ALGORITHM ############## 
 
@@ -44,16 +47,11 @@ nat <- function(x, half_window=5){
   roll_sum(c(zeros, rule, zeros), n = 2 * half_window + 1, partial = FALSE)
 }
 
-# LOG-Act value : natural log of number of activity counts during scored epoch + 1
-# below is a demo code of how it will be done later.
-# head(log(counts+1))
-counts <- prep.df$counts
-
 #' Providing the sleep status of the subject in the dataframe. 
 #' S = Sleep
 #' W = Awake
-#' Based on Sadeh paper, the condition for PS is that if PS >= 0, then "S"
-#' If PS < 0, then "W"
+#' Based on Sadeh paper, the condition for PS is that if PS >= -4, then "S"
+#' If PS < -4, then "W"
 #' code that fixes the total sleep time 
 prob_sleep <- function(data, counts=data$counts){
   data %>% 
@@ -65,9 +63,3 @@ prob_sleep <- function(data, counts=data$counts){
                     - 0.703 * log(.data$count + 1)),
            sleep = if_else(.data$score > -4, "S", "W"))
 }
-
-prep_sleep <- prob_sleep(agd_60s,counts=agd_60s$counts)
-km5 <- prob_sleep(prep.df, counts=prep.df$counts)
-km13 <- prob_sleep(prep_df, counts=prep_df$counts)
-km16 <- prob_sleep(prep_df, counts=prep_df$counts)
-  
