@@ -1,7 +1,5 @@
 #' Name: Heejoon Ahn
 #' Date : June 26, 2020
-#' Making functions for actigraph data adjusted for Emond Lab that is directly derived from the 
-#' device
 
 #' Load the necessary libraries for all functions that will be applied to the 
 #' package that will ulimately be generated.
@@ -23,10 +21,6 @@ library(chron)
 #' This first set of functions is to read in the raw agd files set into 
 #' 10-second epochs by the actigraph device and extract only the wanted data files
 #' by the appropriate 60-second epoch interval..
-#' The second set of functions is to read in the pilot study data if conversion has 
-#' already been done into a different file format 
-#' (mainly for Emond Lab work only)
-#' The last set of the functions will be for calculations of certain values of interest
 
 #' read_agd = This function is set to read raw agd files and is derived from
 #' the source: https://github.com/dipetkov/actigraph.sleepr/blob/master/R/read_agd.R
@@ -36,12 +30,15 @@ library(chron)
 
 #' Read an *.agd file, with no post-processing
 #'
-#' Read ActiGraph sleep watch data from an SQLite database stored in an AGD file and return a list with (at least) five tables: data, sleep, filters, settings, awakenings. The tables have the schema described in the ActiLife 6 User manual and the timestamps are converted from Unix time format to human-readable POSIXct representation.
+#' Read ActiGraph sleep watch data from an SQLite database stored in an AGD file and return a list with (at least) five tables: data, sleep, 
+#' filters, settings, awakenings. The tables have the schema described in the ActiLife 6 User manual and the timestamps are converted from 
+#' Unix time format to human-readable POSIXct representation.
 #' @param file Full path to an agd file to read.
 #' @param tz Time zone to convert DateTime ticks to POSIX time.
 #' @return A list of five tables: settings, data, filters, sleep, awakenings and, if available, capsense.
 #' @details
-#' Some Actigraph devices contain a capacitive sensor to detect monitor removal when worn against the skin. If that data is available, the return list includes a capsense table as well.
+#' Some Actigraph devices contain a capacitive sensor to detect monitor removal when worn against the skin. If that data is available, 
+#' the return list includes a capsense table as well.
 #' @references ActiLife 6 User's Manual by the ActiGraph Software Department. 04/03/2012.
 #' @references \code{covertagd}: R package for converting agd files from ActiGraph into data.frames.
 #' @seealso \code{\link{read_agd}}
@@ -119,8 +116,7 @@ read_agd_raw <- function(file, tz = "EST") {
 #' the following is a test data from the full study to observe if this read_agd function
 #' works properly. The following line is just the file path object.
 
-file_path <- "~/Desktop/Research/Emond Lab/Copy of Data/full_study_agd/K01M013 (2019-09-04)10sec.agd"
-file_path <- "~/Desktop/Research/Emond Lab/Copy of Data/Full Study/Baseline visits/K01M016 (2020-01-10)10sec.agd"
+file_path <- "file path here"
 fdf <- read_agd_raw(file_path, tz="EST")
 agd_data <- fdf$data
 
@@ -139,9 +135,6 @@ epoch_60s <- function(file){
     summarize(counts = sum(counts))
 }
 
-# testing
-agd_60s <- epoch_60s(agd_data)
-
 # convert the epochs to timestamp
 epoch_timestamp.df <- function(df){
   sadeh.df <- df[,1]
@@ -156,6 +149,3 @@ epoch_timestamp.df <- function(df){
   sadeh.df <- data.frame(sadeh.df)
   return(sadeh.df)
 }
-
-prep_df <- epoch_timestamp.df(agd_60s)
-
